@@ -1,47 +1,27 @@
 package com.microservicespractice.ProductService.service.impl;
 
-import com.microservicespractice.ProductService.entity.Product;
-import com.microservicespractice.ProductService.exception.ProductServiceCustomException;
-import com.microservicespractice.ProductService.model.ProductRequest;
-import com.microservicespractice.ProductService.model.ProductResponse;
+import com.microservicespractice.ProductService.dto.ProductDTO;
+import com.microservicespractice.ProductService.exception.ProductNotFoundException;
+import com.microservicespractice.ProductService.mapper.ProductMapper;
 import com.microservicespractice.ProductService.repository.ProductRepository;
 import com.microservicespractice.ProductService.service.ProductService;
-import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
 
-import static org.springframework.beans.BeanUtils.*;
-
 @Service
-@Log4j2
+@RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
-    @Autowired
-    private ProductRepository productRepository;
+    private final ProductRepository productRepository;
+    private static final ProductMapper MAPPER = Mappers.getMapper((ProductMapper.class));
 
     @Override
-    public long addProduct(ProductRequest productRequest) {
-        log.info("Adding product...");
-
-        Product product
-                = Product.builder()
-                .productName(productRequest.getName())
-                .productPrice(productRequest.getPrice())
-                .productQuantity(productRequest.getQuantity())
-                .build();
-
-        productRepository.save(product);
-        log.info("Product created");
-        return product.getProductId();
+    public ProductDTO addProduct(ProductDTO productDTO) {
+        return MAPPER.mapProductToProductDTO(productRepository.save(MAPPER.mapProductDTOToProduct(productDTO)));
     }
 
     @Override
-    public ProductResponse getProductById(long productId) {
-        log.info("Getting product by id {}", productId);
-
-        Product product = productRepository.findById(productId).orElseThrow(() -> new ProductServiceCustomException("Product with this id not found!!!", "PRODUCT_NOT_FOUND"));
-        ProductResponse productResponse = new ProductResponse();
-        copyProperties(product, productResponse);
-
-        return productResponse;
+    public ProductDTO getProductDTOById(long productId) {
+        return MAPPER.mapProductToProductDTO(productRepository.findById(productId).orElseThrow(() -> new ProductNotFoundException("Product with this id not found!!!", "PRODUCT_NOT_FOUND")));
     }
 }

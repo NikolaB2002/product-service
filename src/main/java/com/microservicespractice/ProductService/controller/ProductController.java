@@ -1,28 +1,29 @@
 package com.microservicespractice.ProductService.controller;
 
+import com.microservicespractice.ProductService.mapper.ProductMapper;
 import com.microservicespractice.ProductService.model.ProductRequest;
 import com.microservicespractice.ProductService.model.ProductResponse;
 import com.microservicespractice.ProductService.service.ProductService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.mapstruct.factory.Mappers;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/product")
+@RequiredArgsConstructor
 public class ProductController {
-    @Autowired
-    private ProductService productService;
+    private static final ProductMapper MAPPER = Mappers.getMapper((ProductMapper.class));
+    private final ProductService productService;
 
     @PostMapping
-    public ResponseEntity<Long> addProduct(@RequestBody ProductRequest productRequest){
-        long productId = productService.addProduct(productRequest);
-        return new ResponseEntity<>(productId, HttpStatus.CREATED);
+    public ResponseEntity<ProductResponse> addProduct(@RequestBody ProductRequest productRequest){
+        return new ResponseEntity<>(MAPPER.mapProductDTOToProductResponse(productService.addProduct(MAPPER.mapProductRequestToProductDTO(productRequest))), HttpStatus.CREATED);
     };
 
     @GetMapping("/{id}")
     public ResponseEntity<ProductResponse> getProductById(@PathVariable("id") long productId){
-        ProductResponse productResponse = productService.getProductById(productId);
-        return new ResponseEntity<>(productResponse, HttpStatus.OK);
+        return new ResponseEntity<>(MAPPER.mapProductDTOToProductResponse(productService.getProductDTOById(productId)), HttpStatus.OK);
     }
 }

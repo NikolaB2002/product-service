@@ -9,8 +9,8 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 @ControllerAdvice
 public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
-    @ExceptionHandler(ProductServiceCustomException.class)
-    public ResponseEntity<ErrorResponse> handleProductServiceException(ProductServiceCustomException customException) {
+    @ExceptionHandler(ProductNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleProductServiceException(ProductNotFoundException customException) {
         return new ResponseEntity<>( new ErrorResponse().builder()
                 .errorCode(customException.getErrorCode())
                 .errorMessage(customException.getMessage())

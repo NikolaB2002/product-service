@@ -1,10 +1,9 @@
 package com.microservicespractice.ProductService.service;
 
-import com.microservicespractice.ProductService.model.ProductRequest;
-import com.microservicespractice.ProductService.model.ProductResponse;
+import com.microservicespractice.ProductService.dto.ProductDTO;
 
 public interface ProductService {
-    long addProduct(ProductRequest productRequest);
+    ProductDTO addProduct(ProductDTO productDTO);
 
-    ProductResponse getProductById(long productId);
+    ProductDTO getProductDTOById(long productId);
 }
