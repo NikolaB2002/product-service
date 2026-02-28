@@ -1,13 +1,8 @@
 package com.microservicespractice.ProductService.exception;
 
-import lombok.Data;
-
-@Data
 public class ProductNotFoundException extends RuntimeException{
-    private String errorCode;
 
-    public ProductNotFoundException(String message, String errorCode) {
+    public ProductNotFoundException(String message) {
         super(message);
-        this.errorCode = errorCode;
     }
 }

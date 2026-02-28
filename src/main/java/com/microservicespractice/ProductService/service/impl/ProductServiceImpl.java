@@ -23,14 +23,14 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductDTO getProductDTOById(long productId) {
-        return MAPPER.mapProductToProductDTO(productRepository.findById(productId).orElseThrow(() -> new ProductNotFoundException("Product with this id not found!!!", "PRODUCT_NOT_FOUND")));
+        return MAPPER.mapProductToProductDTO(productRepository.findById(productId).orElseThrow(() -> new ProductNotFoundException("Product with this id not found!!!")));
     }
 
     @Override
     public void reduceProductQuantity(long productId, long productQuantity) {
         ProductDTO productDTO = getProductDTOById(productId);
         if(productDTO.getProductQuantity() < productQuantity){
-            throw new ProductInsufficientQuantityException("Product does not have sufficient quantity!!!", "INSUFFICIENT_QUANTITY");
+            throw new ProductInsufficientQuantityException("Product does not have sufficient quantity!!!");
         }
         productDTO.setProductQuantity(productDTO.getProductQuantity() - productQuantity);
         productRepository.save(MAPPER.mapProductDTOToProduct(productDTO));
