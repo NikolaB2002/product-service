@@ -26,6 +26,6 @@ public class GlobalExceptionHandler {
                 ex.getMessage(),
                 "PRODUCT_INSUFFICIENT_QUANTITY"
         );
-        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
